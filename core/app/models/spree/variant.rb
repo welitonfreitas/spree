@@ -156,9 +156,20 @@ module Spree
       self.option_values.detect { |o| o.option_type.name == opt_name }.try(:presentation)
     end
 
-    def price_in(currency)
-      prices.detect { |price| price.currency == currency } || Spree::Price.new(variant_id: id, currency: currency)
+    def price_in(currency, options = {})
+      if options[:classe_preco]
+        classe_preco = options[:classe_preco]
+      elsif options[:spree_current_user]
+        classe_preco = options[:spree_current_user].classe
+      else
+        classe_preco = -999999 #preço defalt
+      end
+      prices.detect { |price| price.currency == currency and price.classe == classe_preco } || Spree::Price.new(variant_id: id, currency: currency)
     end
+
+    #def price_in(currency)
+    #  prices.detect { |price| price.currency == currency } || Spree::Price.new(variant_id: id, currency: currency)
+    #end
 
     def amount_in(currency)
       price_in(currency).try(:amount)

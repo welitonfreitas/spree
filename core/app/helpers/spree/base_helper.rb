@@ -16,9 +16,9 @@ module Spree
       end.sort_by { |c| c.name.parameterize }
     end
 
-    def display_price(product_or_variant)
+    def display_price(product_or_variant, options = {})
       product_or_variant.
-        price_in(current_currency).
+        price_in(current_currency, spree_current_user: spree_current_user, classe_preco: options[:classe_preco]).
         display_price_including_vat_for(current_price_options).
         to_html
     end
